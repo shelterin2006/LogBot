@@ -1,14 +1,14 @@
 
 import discord
-# from discord import message
-# from discord import user
-# from discord import player
-# from discord import channel
-# from discord.channel import VoiceChannel
-# from discord.client import Client
-# from discord.enums import ExpireBehaviour
-# from discord.ext import commands
-# from discord.utils import sleep_until
+from discord import message
+from discord import user
+from discord import player
+from discord import channel
+from discord.channel import VoiceChannel
+from discord.client import Client
+from discord.enums import ExpireBehaviour
+from discord.ext import commands
+from discord.utils import sleep_until
 # import time
 # import io
 # import aiohttp
@@ -23,11 +23,11 @@ client = commands.Bot(command_prefix = '..')
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
-# @client.event
-# async def on_message(ctx):
-#     if ctx.author == client.user:
-#         return
-#     await client.process_commands(ctx)
+@client.event
+async def on_message(ctx):
+    if ctx.author == client.user:
+        return
+    await client.process_commands(ctx)
 
 # res = { 
 #     952847230648348722 : 952848925226840094, 
