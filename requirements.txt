@@ -1,1 +1,8 @@
 discord.py
+aiohttp
+pickle
+datetime
+pytz
+time
+io
+os
