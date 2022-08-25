@@ -1,8 +1,4 @@
 discord.py==2.0.0
 aiohttp
-pickle
 datetime
 pytz
-time
-io
-os
