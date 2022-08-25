@@ -25,18 +25,11 @@ client = commands.Bot(command_prefix = '..')
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
-database = {}
 @client.event
 async def on_message(ctx):
     if ctx.author == client.user:
         return
     await client.process_commands(ctx)
-def write_file(ctx):
-  f = open('text.txt', 'w')
-  f.write(ctx)
-  f.close()
-  return ctx
-
 
 res = { 
     952847230648348722 : 952848925226840094, 
@@ -142,4 +135,4 @@ def time_string():
 
 b()
 
-client.run(os.environ['Token'])
+client.run("OTI0Njc1MjQ4ODcwMjczMDU2.GxcDT1._YQnpHbjxHlWKM5aMiYDujNnC_theL52k0jY0o")
