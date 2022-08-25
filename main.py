@@ -135,4 +135,4 @@ def time_string():
 
 b()
 
-client.run(DISCORD_TOKEN)
+client.run("OTI0Njc1MjQ4ODcwMjczMDU2.GxcDT1._YQnpHbjxHlWKM5aMiYDujNnC_theL52k0jY0o)
