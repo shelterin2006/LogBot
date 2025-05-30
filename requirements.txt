@@ -1,4 +1,5 @@
-discord.py==2.0.0
-aiohttp
-datetime
-pytz
+# Install using: pip3 install -r requirements.txt
+discord.py>=2.0.0
+aiohttp>=3.8.0
+pytz>=2023.3
+python-dotenv>=1.0.0
