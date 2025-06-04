@@ -75,3 +75,19 @@ hoặc
 - Hỗ trợ nhiều server
 - Tự động lưu cấu hình
 - Thông báo lỗi chi tiết
+
+### Cấu trúc file `server_channels.json`
+
+File này lưu cấu hình kênh log cho từng server. Mỗi server (guild) sẽ có một object với ID là key, value là ID của channel log.
+
+Ví dụ về nội dung file:
+
+```json
+{
+  "1008728257253867621": 123456789012345678,
+  "987654321098765432": 234567890123456789
+}
+```
+
+- **Key**: Guild ID (ID của server)
+- **Value**: Channel ID (ID của kênh log tin nhắn)
