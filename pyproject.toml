@@ -3,4 +3,9 @@ name = "logbot"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.8"
-dependencies = []
+dependencies = [
+    "datetime>=5.5",
+    "discord>=2.3.2",
+    "dotenv>=0.9.9",
+    "pytz>=2025.2",
+]
