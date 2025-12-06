@@ -1,32 +1,29 @@
 import discord
-from discord import app_commands
-
-from cogs.events import Events
-from utils.config import TOKEN
-import traceback
 from discord.ext import commands
-from utils.config import TOKEN
 import os
+import traceback
+from utils.config import TOKEN
+# Giả sử Events class của bạn nằm ở đây
+from cogs.events import Events
 
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-client = discord.Client(intents=intents)
-tree = discord.app_commands.CommandTree(client)
-events = Events(client)
 
-# Sử dụng commands.Bot thay vì discord.Client
 class MyBot(commands.Bot):
     def __init__(self):
+        intents = discord.Intents.default()
+        intents.message_content = True
+        intents.members = True
+
         super().__init__(
-            command_prefix="!",  # Prefix cho message command (nếu dùng)
+            command_prefix="!",
             intents=intents,
             help_command=None,
-            application_id=None  # Điền App ID nếu cần thiết
+            application_id=None
         )
+        # Khởi tạo Events helper tại đây và truyền bot (self) vào
+        self.events_helper = Events(self)
 
     async def setup_hook(self):
-        # Load các extension (Cogs) từ thư mục cogs
+        # 1. Load các extension (Cogs)
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py'):
                 try:
@@ -35,49 +32,37 @@ class MyBot(commands.Bot):
                 except Exception as e:
                     print(f'Failed to load extension {filename}. Error: {e}')
 
-        # Sync command global hoặc guild cụ thể
-        # Lưu ý: Sync global mất tới 1 giờ để cập nhật trên mọi server.
-        # Sync guild (debug) thì ngay lập tức.
-
-        # Uncomment dòng dưới để sync global (chạy 1 lần rồi comment lại để tránh rate limit)
-        # await self.tree.sync()
-
-        # Hoặc sync cho guild cụ thể (Debug nhanh)
-        MY_GUILD = discord.Object(id=1008728257253867621)
-        self.tree.copy_global_to(guild=MY_GUILD)
-        await self.tree.sync(guild=MY_GUILD)
-        print("Commands synced!")
+        # 2. SYNC GLOBAL (QUAN TRỌNG)
+        # Lệnh này sẽ đẩy command lên toàn bộ server bot đang tham gia
+        print("Đang bắt đầu Sync Global... (Có thể mất 1 lúc)")
+        synced = await self.tree.sync()
+        print(f"Đã sync {len(synced)} lệnh Global thành công!")
 
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
-        print('------')
+        # Gọi event từ class Events cũ của bạn
+        if hasattr(self.events_helper, 'on_ready'):
+            await self.events_helper.on_ready()
+
+    async def on_message_delete(self, message):
+        # Gọi event xử lý delete
+        if hasattr(self.events_helper, 'on_message_delete'):
+            await self.events_helper.on_message_delete(message)
+
+    async def on_message_edit(self, before, after):
+        # Gọi event xử lý edit
+        if hasattr(self.events_helper, 'on_message_edit'):
+            await self.events_helper.on_message_edit(before, after)
+
+    async def on_error(self, event_method, *args, **kwargs):
+        print(f"Lỗi trong event {event_method}:")
+        traceback.print_exc()
+        # Gọi event xử lý error nếu class Events có hỗ trợ
+        if hasattr(self.events_helper, 'on_error'):
+            await self.events_helper.on_error(event_method, *args, **kwargs)
 
 
+# Khởi chạy bot
 bot = MyBot()
-bot.run(TOKEN)
-
-GUILD_IDS = [1008728257253867621]  # Thay bằng các guild ID của bạn
-
-@client.event
-async def on_ready():
-    bot.tree.clear_commands(guild=None)
-    await bot.tree.sync()
-    await events.on_ready()
-
-@client.event
-async def on_error(event, *args, **kwargs):
-    print(f"Lỗi trong event {event}:")
-    traceback.print_exc()
-    await events.on_error(event, *args, **kwargs)
-
-@client.event
-async def on_message_delete(message):
-    await events.on_message_delete(message)
-
-@client.event
-async def on_message_edit(before, after):
-    await events.on_message_edit(before, after)
-
-# Chạy bot
 print("Đang khởi động bot...")
-client.run(TOKEN)
+bot.run(TOKEN)
