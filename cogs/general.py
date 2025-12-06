@@ -20,14 +20,7 @@ class General(commands.Cog):
     @app_commands.command(name="chat", description="Bot sẽ lặp lại tin nhắn bạn gửi trong Embed.")
     @app_commands.describe(message="Tin nhắn bạn muốn bot lặp lại")
     async def chat_command(self, interaction: discord.Interaction, message: str):
-        embed = discord.Embed(
-            title="💬 Lời nhắn được lặp lại",
-            description=f"**Người dùng:** {interaction.user.mention}\n**Nội dung:**\n>>> {message}",
-            color=discord.Color.blue()  # Bạn có thể chọn màu khác
-        )
-        embed.set_footer(text=f"Lệnh được thực thi bởi {interaction.user.display_name}",
-                         icon_url=interaction.user.display_avatar.url)
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(f"Bạn đã nói: **{message}**")
 
     @app_commands.command(name="shorturl", description="Tạo link rút gọn")
     @app_commands.describe(url="Link cần rút gọn", custom="Tên tùy chỉnh")
